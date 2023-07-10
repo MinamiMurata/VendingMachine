@@ -39,32 +39,44 @@ end
 # ジュースの管理
 class Stock < VendingMachine
   # コーラの値段は1本120円
-  DEFAULT_NAME = "cola"
-  DEFAULT_PRICE = 120
-  # 初期状態でコーラを5本格納している
-  DEFAULT_NUMBER = 5
-  #読み取り用のメソッドを定義
-  attr_accessor :name, :price, :number
+  # DEFAULT_NAME = "cola"
+  # DEFAULT_PRICE = 120
+  # # 初期状態でコーラを5本格納している
+  # DEFAULT_NUMBER = 5
+  # #読み取り用のメソッドを定義
+  # attr_accessor :name, :price, :number
 
-  def initialize(name = DEFAULT_NAME, price = DEFAULT_PRICE, number = DEFAULT_NUMBER)
-    @name = name
-    @price = price
-    @number = number
+  # def initialize(name = DEFAULT_NAME, price = DEFAULT_PRICE, number = DEFAULT_NUMBER)
+    # @name = name
+    # @price = price
+    # @number = number
+  # end
+  def initialize
+    @cola = {name: "コーラ", price: 120, stock: 5 } #追記
+    @water = {name: "水", price: 100, stock: 5 } #追記
+    @red_bull = {name: "レッドブル",price: 200, stock: 5 } #追記
+    # 自販機に入っているドリンク3種類の情報を配列に格納
+    @drinks = [@cola, @water, @red_bull] #追記
   end
 
   # 値段と名前と在庫を取得できる
-  def current_drink
-    puts "#{@name}は#{@price}円で在庫は#{@number}本です。"
+  # def current_drink
+  #   puts "#{@name}は#{@price}円で在庫は#{@number}本です。"
+  # end
+  def inform_drink_types
+    puts "#{@drinks[0][:name]}は#{@drinks[0][:price]}円で在庫は#{@drinks[0][:stock]}本です。"
+    puts "#{@drinks[1][:name]}は#{@drinks[1][:price]}円で在庫は#{@drinks[1][:stock]}本です。"
+    puts   "#{@drinks[2][:name]}は#{@drinks[2][:price]}円で在庫は#{@drinks[2][:stock]}本です。"
   end
 
-  drinks = []
-  cola = { name: "コーラ", price: 120, number: 5 }
-  redbull = { name: "レットブル", price: 200, number: 5 }
-  water = { name: "水", price: 100, number: 5 }
+  # drinks = []
+  # cola = { name: "コーラ", price: 120, number: 5 }
+  # redbull = { name: "レットブル", price: 200, number: 5 }
+  # water = { name: "水", price: 100, number: 5 }
 
-  drinks << cola
-  drinks << redbull
-  drinks << water
+  # drinks << cola
+  # drinks << redbull
+  # drinks << water
 
   def drink_list
     case @@slot_money
@@ -81,12 +93,15 @@ class Stock < VendingMachine
 end
 
 class Sales < Stock
+  def initialize
+    @sales = 0
+  end
+
   def purchase(money)
     if @@slot_money > @price
       @@slot_money -= @price
       @number -= 1
-      @sale = 0
-      @sale += @price
+      @sales += @price
       return_money
     end
   end
