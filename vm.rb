@@ -25,11 +25,10 @@ class VendingMachine
     # 想定外のもの（１円玉や５円玉。千円札以外のお札、そもそもお金じゃないもの（数字以外のもの）など）
     # が投入された場合は、投入金額に加算せず、それをそのまま釣り銭としてユーザに出力する。
     return false unless MONEY.include?(money)
-    @@slot_money += money
-    puts "投入金額：#{@@slot_money}円"
-
     # 自動販売機にお金を入れる
     @@slot_money += money
+    puts "投入金額：#{@@slot_money}円"
+    # @@slot_money += money この行いらない気がしたのでコメントアウト
   end
 
   # 払い戻し操作を行うと、投入金額の総計を釣り銭として出力する。
@@ -71,7 +70,7 @@ class Stock < VendingMachine
   def inform_drink_types
     puts "#{@drinks[0][:name]}は#{@drinks[0][:price]}円で在庫は#{@drinks[0][:stock]}本です。"
     puts "#{@drinks[1][:name]}は#{@drinks[1][:price]}円で在庫は#{@drinks[1][:stock]}本です。"
-    puts   "#{@drinks[2][:name]}は#{@drinks[2][:price]}円で在庫は#{@drinks[2][:stock]}本です。"
+    puts "#{@drinks[2][:name]}は#{@drinks[2][:price]}円で在庫は#{@drinks[2][:stock]}本です。"
   end
 
   # drinks = []
@@ -84,13 +83,13 @@ class Stock < VendingMachine
   # drinks << water
 
   def drink_list
-    case @@slot_money
-    when @@slot_money >= 200
-      puts "現在#{drinks[0][:name]}または#{drinks[1][:name]}または#{drinks[2][:name]}が購入可能です。"
-    when @@slot_money >= 120
-      puts "現在#{drinks[0][:name]}または#{drinks[2][:name]}が購入可能です。"
-    when @@slot_money >= 100
-      puts "現在#{drinks[2][:name]}が購入可能です。"
+    slot_money = @@slot_money
+    if slot_money >= 200
+      puts "現在#{@drinks[0][:name]}または#{@drinks[1][:name]}または#{@drinks[2][:name]}が購入可能です。"
+    elsif slot_money >= 120
+      puts "現在#{@drinks[0][:name]}または#{@drinks[1][:name]}が購入可能です。"
+    elsif slot_money >= 100
+      puts "現在#{@drinks[1][:name]}が購入可能です。"
     else
       puts "購入不可能です！！お金ください♡"
     end
@@ -121,7 +120,7 @@ class Sales < Stock
 end
 
 vm = VendingMachine.new
-vm.slot_money(500)
+vm.slot_money(0)
 stock = Stock.new
 stock.drink_list
 
