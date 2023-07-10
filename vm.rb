@@ -20,9 +20,14 @@ class VendingMachine
   # 10円玉、50円玉、100円玉、500円玉、1000円札を１つずつ投入できる。
   # 投入は複数回できる。
   def slot_money(money)
+    puts "お金ちょうだい"
+    money = gets.chomp.to_i
     # 想定外のもの（１円玉や５円玉。千円札以外のお札、そもそもお金じゃないもの（数字以外のもの）など）
     # が投入された場合は、投入金額に加算せず、それをそのまま釣り銭としてユーザに出力する。
     return false unless MONEY.include?(money)
+    @@slot_money += money
+    puts "投入金額：#{@@slot_money}円"
+
     # 自動販売機にお金を入れる
     @@slot_money += money
   end
@@ -119,3 +124,4 @@ vm = VendingMachine.new
 vm.slot_money(500)
 stock = Stock.new
 stock.drink_list
+
