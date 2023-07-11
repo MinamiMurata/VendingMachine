@@ -1,2 +1,2 @@
-members = %w[みきてぃ なおき デイジー みのりん ぬまし ゆきまる なおき おぐぽん]
+members = %w[デイジー]
 puts members.sample
