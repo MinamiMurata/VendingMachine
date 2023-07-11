@@ -88,6 +88,8 @@ class Sales < Stock
       purchase_process(choice_drink)
       puts "ガチャン"
       puts "#{@drinks[choice_drink][:name]}"
+    else
+      drink_list
     end
   end
 
@@ -115,15 +117,17 @@ stock = Stock.new
 sales = Sales.new
 
 while true
-  puts "---------------------\nどうする？\n---------------------\n1.在庫を見る\n2.お金を入れる\n3.購入可能な商品を見る\n4.やめる\n---------------------"
+  puts "---------------------\nどうする？\n---------------------\n1.在庫を見る\n2.お金を入れる\n3.購入可能な商品を見る\n4.商品を購入する\n5.やめる\n---------------------"
   choice = gets.chomp.to_i
   if choice == 1
-    stock.inform_drink_types
+    sales.inform_drink_types
   elsif choice == 2
     vm.slot_money
   elsif choice == 3
     stock.drink_list
   elsif choice == 4
+    sales.purchase
+  elsif choice == 5
     vm.return_money
     return
   else
