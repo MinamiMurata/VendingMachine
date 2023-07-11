@@ -11,12 +11,6 @@ class VendingMachine
     @@slot_money = 0
   end
 
-  # 投入金額の総計を取得できる。
-  # def current_slot_money
-  #   # 自動販売機に入っているお金を表示する
-  #   @@slot_money
-  # end
-
   # 10円玉、50円玉、100円玉、500円玉、1000円札を１つずつ投入できる。
   # 投入は複数回できる。
   def slot_money
@@ -24,11 +18,10 @@ class VendingMachine
     money = gets.chomp.to_i
     # 想定外のもの（１円玉や５円玉。千円札以外のお札、そもそもお金じゃないもの（数字以外のもの）など）
     # が投入された場合は、投入金額に加算せず、それをそのまま釣り銭としてユーザに出力する。
-    return false unless MONEY.include?(money)
+    return "種類が違いますよ。" unless MONEY.include?(money)
     # 自動販売機にお金を入れる
     @@slot_money += money
     puts "投入金額：#{money}円  投入金額合計:#{@@slot_money}円"
-    # @@slot_money += money この行いらない気がしたのでコメントアウト
   end
 
   # 払い戻し操作を行うと、投入金額の総計を釣り銭として出力する。
@@ -42,8 +35,6 @@ end
 
 # ジュースの管理
 class Stock < VendingMachine
-  # #読み取り用のメソッドを定義
-  # attr_accessor :name, :price, :number
 
   def initialize
     @cola = { name: "コーラ", price: 120, stock: 5 }
@@ -84,17 +75,21 @@ class Sales < Stock
     puts "何を買いますか？"
     puts "1.コーラ 2.水 3.レッドブル"
     choice_drink = gets.to_i - 1
-    if make_sure_enough_money_to_buy_(choice_drink)
+    if enough_money_to_buy_(choice_drink) && enough_stock_to_buy_(choice_drink)
       purchase_process(choice_drink)
       puts "ガチャン"
       puts "#{@drinks[choice_drink][:name]}"
     else
-      drink_list
+      puts "買えないよ。"
     end
   end
 
-  def make_sure_enough_money_to_buy_(drink)
-    @@slot_money > @drinks[drink][:price]
+  def enough_money_to_buy_(drink)
+    @@slot_money >= @drinks[drink][:price]
+  end
+
+  def enough_stock_to_buy_(drink)
+    0 < @drinks[drink][:stock]
   end
 
   def purchase_process(drink)
@@ -106,10 +101,6 @@ class Sales < Stock
   def current_sales
     puts "現在の売上金額は#{@sales}です。"
   end
-
-  # def stocks
-  #   puts "現在#{@name}は残り#{@number}本です。"
-  # end
 end
 
 vm = VendingMachine.new
@@ -131,6 +122,6 @@ while true
     vm.return_money
     return
   else
-    puts "1~4の数字を入力してください。"
+    puts "1~5の数字を入力してください。"
   end
 end
